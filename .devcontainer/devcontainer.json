@@ -1,0 +1,25 @@
+{
+  "name": "Vuln-Labs Environment",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "enableDockerBuildx": true
+    },
+    "ghcr.io/devcontainers/features/python:3": {
+      "version": "3.11"
+    }
+  },
+  "forwardPorts": [8080, 8081],
+  "portsAttributes": {
+    "8080": {
+      "label": "WCD Lab (Port 8080)",
+      "onAutoForward": "notify"
+    },
+    "8081": {
+      "label": "WCD Lab (Port 8081)",
+      "onAutoForward": "notify"
+    }
+  },
+  "postCreateCommand": "python -m pip install requests"
+}
