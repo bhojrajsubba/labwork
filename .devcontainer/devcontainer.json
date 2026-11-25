@@ -6,7 +6,7 @@
       "version": "latest",
       "enableDockerBuildx": true
     },
-    "ghcr.io/devcontainers/features/python:3": {
+    "ghcr.io/devcontainers/features/python:1": {
       "version": "3.11"
     }
   },
