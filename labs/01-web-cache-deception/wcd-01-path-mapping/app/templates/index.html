@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-9">
+    <div class="p-5 mb-4 bg-white rounded-3 shadow-sm border">
+      <div class="container-fluid py-2">
+        <h1 class="display-6 fw-bold">Lab 01: Web Cache Deception (Path Mapping)</h1>
+        <p class="lead text-secondary">
+          Welcome to NovaCorp's internal employee hub. This laboratory demonstrates how path mapping discrepancies between a reverse-proxy cache (Nginx) and a backend application (Flask) can lead to account takeover and sensitive data exfiltration.
+        </p>
+        <hr class="my-4">
+        
+        <h5>🎯 Scenario Goal</h5>
+        <p>
+          You are logged in as an unprivileged employee (or external contractor). Your target is the senior executive <code>Dr. Alex Mercer</code> (username: <code>victim</code>). Steal their private API key and secret flag from their profile!
+        </p>
+
+        <div class="row mt-4">
+          <div class="col-md-6">
+            <div class="card h-100 border-primary">
+              <div class="card-header bg-primary text-white fw-bold">
+                🔑 Pre-Seeded Credentials
+              </div>
+              <div class="card-body">
+                <p class="mb-1"><strong>Victim User (Target):</strong></p>
+                <ul>
+                  <li>Username: <code>victim</code></li>
+                  <li>Password: <code>P@sswordVictim2026!</code></li>
+                </ul>
+                <p class="mb-1"><strong>Attacker User (You):</strong></p>
+                <ul>
+                  <li>Username: <code>attacker</code></li>
+                  <li>Password: <code>attacker123</code></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card h-100 border-warning">
+              <div class="card-header bg-warning text-dark fw-bold">
+                ⚡ Exploitation Workflow
+              </div>
+              <div class="card-body">
+                <ol class="small">
+                  <li>Notice Nginx caches static assets ending in <code>.css</code>.</li>
+                  <li>Notice the backend profile endpoint <code>/profile</code> accepts trailing path elements like <code>/profile/style.css</code>.</li>
+                  <li>Submit <code>/profile/style.css</code> to the <strong>Support Bot</strong>.</li>
+                  <li>The victim bot visits the link with its authenticated session.</li>
+                  <li>Fetch <code>/profile/style.css</code> without cookies to retrieve the cached victim profile!</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 d-flex gap-2">
+          <a class="btn btn-primary" href="/login">Go to Login</a>
+          <a class="btn btn-outline-secondary" href="/report">Support Bot (Report Link)</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,108 @@
+import os
+import sys
+import time
+from urllib.parse import urlsplit
+import requests
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+TARGET_HOST = os.environ.get("TARGET_HOST", "wcd-cache")
+TARGET_PORT = os.environ.get("TARGET_PORT", "80")
+BASE_URL = f"http://{TARGET_HOST}:{TARGET_PORT}"
+
+VICTIM_USER = "victim"
+VICTIM_PASS = "P@sswordVictim2026!"
+
+
+def extract_safe_path(raw_target: str) -> tuple[bool, str]:
+    """
+    Extracts the path and query string from either a relative path or full URL.
+    Safely routes all requests to internal BASE_URL, preventing SSRF.
+    """
+    raw_target = raw_target.strip()
+    if not raw_target:
+        return False, "Path or URL cannot be empty."
+
+    # If the user passed a full URL (e.g. http://localhost:8081/profile/test.css?hi)
+    if "://" in raw_target or raw_target.startswith("//"):
+        try:
+            parsed = urlsplit(raw_target)
+            path = parsed.path
+            if not path:
+                path = "/"
+            if parsed.query:
+                path = f"{path}?{parsed.query}"
+            return True, path
+        except Exception as e:
+            return False, f"Malformed URL provided: {str(e)}"
+    else:
+        # User passed a relative path
+        if not raw_target.startswith("/"):
+            raw_target = "/" + raw_target
+        return True, raw_target
+
+
+def simulate_victim_visit(target_input: str):
+    """Logs into the application as the victim and visits the target path."""
+    valid, path = extract_safe_path(target_input)
+    if not valid:
+        return False, path
+
+    session = requests.Session()
+    session.headers.update({"User-Agent": "NovaCorp-VictimBot/1.0 (Employee-Reviewer)"})
+
+    # Step 1: Authenticate as the victim
+    login_url = f"{BASE_URL}/login"
+    login_payload = {"username": VICTIM_USER, "password": VICTIM_PASS}
+
+    try:
+        login_resp = session.post(login_url, data=login_payload, timeout=5, allow_redirects=True)
+        if login_resp.status_code not in (200, 302):
+            return False, f"Login failed with status {login_resp.status_code}"
+    except Exception as e:
+        return False, f"Connection to target login failed: {str(e)}"
+
+    target_url = f"{BASE_URL}{path}"
+
+    # Step 2: Visit the URL with victim's session
+    try:
+        visit_resp = session.get(target_url, timeout=5)
+        cache_status = visit_resp.headers.get("X-Cache-Status", "N/A")
+        return True, {
+            "target": target_url,
+            "status_code": visit_resp.status_code,
+            "cache_status": cache_status,
+            "content_length": len(visit_resp.text),
+        }
+    except Exception as e:
+        return False, f"Failed visiting target URL: {str(e)}"
+
+
+@app.route("/health", methods=["GET"])
+def health():
+    return jsonify({"status": "healthy", "service": "victim-bot"})
+
+
+@app.route("/visit", methods=["POST"])
+def visit():
+    data = request.get_json(force=True, silent=True) or {}
+    path = data.get("path") or request.form.get("path")
+
+    if not path:
+        return jsonify({"error": "Path parameter is required"}), 400
+
+    print(f"[*] Victim bot received visit request for: {path}", flush=True)
+    success, result = simulate_victim_visit(path)
+
+    if success:
+        print(f"[+] Successfully visited: {result}", flush=True)
+        return jsonify({"status": "success", "result": result}), 200
+    else:
+        print(f"[-] Visit error: {result}", flush=True)
+        return jsonify({"status": "error", "message": result}), 400
+
+
+if __name__ == "__main__":
+    print(f"[*] Victim Bot listening on port 5001 (Targeting {BASE_URL})", flush=True)
+    app.run(host="0.0.0.0", port=5001)

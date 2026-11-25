@@ -1,0 +1,14 @@
+# Git Ignore
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.env
+.venv
+env/
+venv/
+ENV/
+.DS_Store
+Thumbs.db
+*.log
+.pytest_cache/

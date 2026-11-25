@@ -1,0 +1,8 @@
+/* Static CSS styling for NovaCorp Portal */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.navbar-brand {
+  letter-spacing: 0.5px;
+}
