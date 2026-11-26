@@ -97,8 +97,59 @@ services:
       - wcd02-net
     restart: unless-stopped
 
+  # ==========================================
+  # Lab 03: Web Cache Deception (Path Traversal & Static Normalization)
+  # Profile: wcd-03
+  # ==========================================
+  wcd03-cache:
+    build:
+      context: ./labs/01-web-cache-deception/wcd-03-path-traversal-delimiter/cache
+      args:
+        MODE: ${MODE}
+    profiles: ["wcd-03"]
+    ports:
+      - "${HOST_BIND_IP}:${PORT}:80"
+    env_file:
+      - .env
+    environment:
+      - MODE=${MODE}
+    depends_on:
+      - wcd03-app
+    networks:
+      - wcd03-net
+    restart: unless-stopped
+
+  wcd03-app:
+    build:
+      context: ./labs/01-web-cache-deception/wcd-03-path-traversal-delimiter/app
+    profiles: ["wcd-03"]
+    env_file:
+      - .env
+    environment:
+      - MODE=${MODE}
+      - SECRET_KEY=${SECRET_KEY}
+      - BOT_SERVICE_URL=http://wcd03-bot:5001/visit
+    networks:
+      - wcd03-net
+    restart: unless-stopped
+
+  wcd03-bot:
+    build:
+      context: ./labs/01-web-cache-deception/wcd-03-path-traversal-delimiter/bot
+    profiles: ["wcd-03"]
+    env_file:
+      - .env
+    environment:
+      - TARGET_HOST=wcd03-cache
+      - TARGET_PORT=80
+    networks:
+      - wcd03-net
+    restart: unless-stopped
+
 networks:
   wcd01-net:
     driver: bridge
   wcd02-net:
+    driver: bridge
+  wcd03-net:
     driver: bridge

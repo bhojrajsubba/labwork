@@ -1,0 +1,39 @@
+# Standalone Docker Compose for Lab 03 (WCD Double-Lock Delimiter Traversal)
+# Run from this directory: docker compose -f docker-compose.lab.yml up --build
+
+services:
+  wcd03-cache:
+    build:
+      context: ./cache
+      args:
+        MODE: ${MODE}
+    ports:
+      - "${HOST_BIND_IP}:${PORT}:80"
+    env_file:
+      - ../../../.env
+    environment:
+      - MODE=${MODE}
+    depends_on:
+      - wcd03-app
+    restart: unless-stopped
+
+  wcd03-app:
+    build:
+      context: ./app
+    env_file:
+      - ../../../.env
+    environment:
+      - MODE=${MODE}
+      - SECRET_KEY=${SECRET_KEY}
+      - BOT_SERVICE_URL=http://wcd03-bot:5001/visit
+    restart: unless-stopped
+
+  wcd03-bot:
+    build:
+      context: ./bot
+    env_file:
+      - ../../../.env
+    environment:
+      - TARGET_HOST=wcd03-cache
+      - TARGET_PORT=80
+    restart: unless-stopped
