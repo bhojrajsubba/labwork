@@ -7,12 +7,14 @@ services:
     build:
       context: ./labs/01-web-cache-deception/wcd-01-path-mapping/cache
       args:
-        MODE: ${MODE:-vulnerable}
+        MODE: ${MODE}
     profiles: ["wcd-01"]
     ports:
-      - "${HOST_BIND_IP:-127.0.0.1}:${PORT:-8081}:80"
+      - "${HOST_BIND_IP}:${PORT}:80"
+    env_file:
+      - .env
     environment:
-      - MODE=${MODE:-vulnerable}
+      - MODE=${MODE}
     depends_on:
       - wcd01-app
     networks:
@@ -23,9 +25,11 @@ services:
     build:
       context: ./labs/01-web-cache-deception/wcd-01-path-mapping/app
     profiles: ["wcd-01"]
+    env_file:
+      - .env
     environment:
-      - MODE=${MODE:-vulnerable}
-      - SECRET_KEY=${SECRET_KEY:-lab_secret_key_change_in_production_123456}
+      - MODE=${MODE}
+      - SECRET_KEY=${SECRET_KEY}
       - BOT_SERVICE_URL=http://wcd01-bot:5001/visit
     networks:
       - wcd01-net
@@ -35,6 +39,8 @@ services:
     build:
       context: ./labs/01-web-cache-deception/wcd-01-path-mapping/bot
     profiles: ["wcd-01"]
+    env_file:
+      - .env
     environment:
       - TARGET_HOST=wcd01-cache
       - TARGET_PORT=80
@@ -50,12 +56,14 @@ services:
     build:
       context: ./labs/01-web-cache-deception/wcd-02-delimiter/cache
       args:
-        MODE: ${MODE:-vulnerable}
+        MODE: ${MODE}
     profiles: ["wcd-02"]
     ports:
-      - "${HOST_BIND_IP:-127.0.0.1}:${PORT:-8081}:80"
+      - "${HOST_BIND_IP}:${PORT}:80"
+    env_file:
+      - .env
     environment:
-      - MODE=${MODE:-vulnerable}
+      - MODE=${MODE}
     depends_on:
       - wcd02-app
     networks:
@@ -66,9 +74,11 @@ services:
     build:
       context: ./labs/01-web-cache-deception/wcd-02-delimiter/app
     profiles: ["wcd-02"]
+    env_file:
+      - .env
     environment:
-      - MODE=${MODE:-vulnerable}
-      - SECRET_KEY=${SECRET_KEY:-lab_secret_key_change_in_production_123456}
+      - MODE=${MODE}
+      - SECRET_KEY=${SECRET_KEY}
       - BOT_SERVICE_URL=http://wcd02-bot:5001/visit
     networks:
       - wcd02-net
@@ -78,6 +88,8 @@ services:
     build:
       context: ./labs/01-web-cache-deception/wcd-02-delimiter/bot
     profiles: ["wcd-02"]
+    env_file:
+      - .env
     environment:
       - TARGET_HOST=wcd02-cache
       - TARGET_PORT=80

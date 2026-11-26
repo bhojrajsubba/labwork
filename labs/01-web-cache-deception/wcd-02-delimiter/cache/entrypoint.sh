@@ -2,7 +2,7 @@
 set -e
 
 echo "[*] Initializing Nginx Cache Layer (Lab 02: Delimiter Discrepancy)..."
-echo "[*] Selected MODE: ${MODE:-vulnerable}"
+echo "[*] Selected MODE from environment: ${MODE}"
 
 if [ "${MODE}" = "secure" ]; then
     echo "[*] Applying SECURE Nginx configuration"

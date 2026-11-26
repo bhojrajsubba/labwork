@@ -1,8 +1,8 @@
 #!/bin/sh
 set -e
 
-echo "[*] Starting Nginx Cache Layer..."
-echo "[*] Selected MODE: ${MODE:-vulnerable}"
+echo "[*] Initializing Nginx Cache Layer (Lab 01: Path Mapping)..."
+echo "[*] Selected MODE from environment: ${MODE}"
 
 if [ "${MODE}" = "secure" ]; then
     echo "[*] Applying SECURE Nginx configuration"
@@ -12,7 +12,6 @@ else
     cp /etc/nginx/conf.d/nginx.vulnerable.conf /etc/nginx/nginx.conf
 fi
 
-# Clean previous cache entries on container boot
 rm -rf /var/cache/nginx/*
 
 exec nginx -g "daemon off;"
