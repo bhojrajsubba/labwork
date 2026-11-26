@@ -1,5 +1,8 @@
 # Makefile for managing Vulnerability Labs
 
+# Case-tolerant LAB parameter (accepts LAB, lab, lAB, Lab)
+TARGET_LAB ?= $(or $(LAB),$(lab),$(lAB),$(Lab))
+
 .PHONY: help up down logs restart reset test
 
 help:
@@ -11,38 +14,38 @@ help:
 	@echo "  make reset LAB=<lab-name>    Rebuild containers and reset cache/database"
 
 up:
-	@if [ -z "$(LAB)" ]; then \
+	@if [ -z "$(TARGET_LAB)" ]; then \
 		echo "Error: LAB argument required. Example: make up LAB=wcd-02"; exit 1; \
 	fi
-	docker compose --profile $(LAB) up --build -d
-	@echo "Lab $(LAB) is running! Accessible at http://127.0.0.1:8081"
+	docker compose --profile $(TARGET_LAB) up --build -d
+	@echo "Lab $(TARGET_LAB) is running! Accessible at http://127.0.0.1:8081"
 
 down:
-	@if [ -z "$(LAB)" ]; then \
+	@if [ -z "$(TARGET_LAB)" ]; then \
 		echo "Error: LAB argument required. Example: make down LAB=wcd-02"; exit 1; \
 	fi
-	docker compose --profile $(LAB) down
+	docker compose --profile $(TARGET_LAB) down
 
 logs:
-	@if [ -z "$(LAB)" ]; then \
+	@if [ -z "$(TARGET_LAB)" ]; then \
 		echo "Error: LAB argument required. Example: make logs LAB=wcd-02"; exit 1; \
 	fi
-	docker compose --profile $(LAB) logs -f
+	docker compose --profile $(TARGET_LAB) logs -f
 
 test:
-	@if [ -z "$(LAB)" ]; then \
+	@if [ -z "$(TARGET_LAB)" ]; then \
 		echo "Error: LAB argument required. Example: make test LAB=wcd-02"; exit 1; \
-	elif [ "$(LAB)" = "wcd-01" ]; then \
+	elif [ "$(TARGET_LAB)" = "wcd-01" ]; then \
 		python labs/01-web-cache-deception/wcd-01-path-mapping/exploit.py --url http://127.0.0.1:8081; \
-	elif [ "$(LAB)" = "wcd-02" ]; then \
+	elif [ "$(TARGET_LAB)" = "wcd-02" ]; then \
 		python labs/01-web-cache-deception/wcd-02-delimiter/exploit.py --url http://127.0.0.1:8081; \
 	else \
-		echo "Unknown lab: $(LAB)"; exit 1; \
+		echo "Unknown lab: $(TARGET_LAB)"; exit 1; \
 	fi
 
 reset:
-	@if [ -z "$(LAB)" ]; then \
+	@if [ -z "$(TARGET_LAB)" ]; then \
 		echo "Error: LAB argument required. Example: make reset LAB=wcd-02"; exit 1; \
 	fi
-	docker compose --profile $(LAB) down -v
-	docker compose --profile $(LAB) up --build -d
+	docker compose --profile $(TARGET_LAB) down -v
+	docker compose --profile $(TARGET_LAB) up --build -d
