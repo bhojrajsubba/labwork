@@ -7,12 +7,12 @@ services:
     build:
       context: ./labs/01-web-cache-deception/wcd-01-path-mapping/cache
       args:
-        MODE: ${WCD01_MODE:-vulnerable}
+        MODE: ${MODE:-vulnerable}
     profiles: ["wcd-01"]
     ports:
-      - "${HOST_BIND_IP:-127.0.0.1}:${WCD01_PORT:-8080}:80"
+      - "${HOST_BIND_IP:-127.0.0.1}:${PORT:-8081}:80"
     environment:
-      - MODE=${WCD01_MODE:-vulnerable}
+      - MODE=${MODE:-vulnerable}
     depends_on:
       - wcd01-app
     networks:
@@ -24,7 +24,7 @@ services:
       context: ./labs/01-web-cache-deception/wcd-01-path-mapping/app
     profiles: ["wcd-01"]
     environment:
-      - MODE=${WCD01_MODE:-vulnerable}
+      - MODE=${MODE:-vulnerable}
       - SECRET_KEY=${SECRET_KEY:-lab_secret_key_change_in_production_123456}
       - BOT_SERVICE_URL=http://wcd01-bot:5001/visit
     networks:
@@ -50,12 +50,12 @@ services:
     build:
       context: ./labs/01-web-cache-deception/wcd-02-delimiter/cache
       args:
-        MODE: ${WCD02_MODE:-vulnerable}
+        MODE: ${MODE:-vulnerable}
     profiles: ["wcd-02"]
     ports:
-      - "${HOST_BIND_IP:-127.0.0.1}:${WCD02_PORT:-8081}:80"
+      - "${HOST_BIND_IP:-127.0.0.1}:${PORT:-8081}:80"
     environment:
-      - MODE=${WCD02_MODE:-vulnerable}
+      - MODE=${MODE:-vulnerable}
     depends_on:
       - wcd02-app
     networks:
@@ -67,7 +67,7 @@ services:
       context: ./labs/01-web-cache-deception/wcd-02-delimiter/app
     profiles: ["wcd-02"]
     environment:
-      - MODE=${WCD02_MODE:-vulnerable}
+      - MODE=${MODE:-vulnerable}
       - SECRET_KEY=${SECRET_KEY:-lab_secret_key_change_in_production_123456}
       - BOT_SERVICE_URL=http://wcd02-bot:5001/visit
     networks:

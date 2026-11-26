@@ -2,32 +2,32 @@
 # Run from this directory: docker compose -f docker-compose.lab.yml up --build
 
 services:
-  wcd-cache:
+  wcd01-cache:
     build:
       context: ./cache
       args:
-        MODE: ${WCD_MODE:-vulnerable}
+        MODE: ${MODE:-vulnerable}
     ports:
-      - "${HOST_BIND_IP:-127.0.0.1}:${WCD_PORT:-8080}:80"
+      - "${HOST_BIND_IP:-127.0.0.1}:${PORT:-8081}:80"
     environment:
-      - MODE=${WCD_MODE:-vulnerable}
+      - MODE=${MODE:-vulnerable}
     depends_on:
-      - wcd-app
+      - wcd01-app
     restart: unless-stopped
 
-  wcd-app:
+  wcd01-app:
     build:
       context: ./app
     environment:
-      - MODE=${WCD_MODE:-vulnerable}
+      - MODE=${MODE:-vulnerable}
       - SECRET_KEY=${SECRET_KEY:-lab_secret_key_change_in_production_123456}
-      - BOT_SERVICE_URL=http://wcd-bot:5001/visit
+      - BOT_SERVICE_URL=http://wcd01-bot:5001/visit
     restart: unless-stopped
 
-  wcd-bot:
+  wcd01-bot:
     build:
       context: ./bot
     environment:
-      - TARGET_HOST=wcd-cache
+      - TARGET_HOST=wcd01-cache
       - TARGET_PORT=80
     restart: unless-stopped

@@ -15,7 +15,7 @@ up:
 		echo "Error: LAB argument required. Example: make up LAB=wcd-02"; exit 1; \
 	fi
 	docker compose --profile $(LAB) up --build -d
-	@echo "Lab $(LAB) is running! Check .env for the configured port."
+	@echo "Lab $(LAB) is running! Accessible at http://127.0.0.1:8081"
 
 down:
 	@if [ -z "$(LAB)" ]; then \
@@ -33,7 +33,7 @@ test:
 	@if [ -z "$(LAB)" ]; then \
 		echo "Error: LAB argument required. Example: make test LAB=wcd-02"; exit 1; \
 	elif [ "$(LAB)" = "wcd-01" ]; then \
-		python labs/01-web-cache-deception/wcd-01-path-mapping/exploit.py --url http://127.0.0.1:8080; \
+		python labs/01-web-cache-deception/wcd-01-path-mapping/exploit.py --url http://127.0.0.1:8081; \
 	elif [ "$(LAB)" = "wcd-02" ]; then \
 		python labs/01-web-cache-deception/wcd-02-delimiter/exploit.py --url http://127.0.0.1:8081; \
 	else \
