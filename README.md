@@ -77,7 +77,7 @@ This platform was built from the ground up to be **hostable on a cheap $5/mo VPS
 | # | Vulnerability Class | Lab Name | Stack | Status |
 |---|---|---|---|---|
 | **01** | **Web Cache Deception** | `wcd-01-path-mapping` | Nginx + Flask + Bot | ✅ Complete |
-| | | `wcd-02-delimiter-discrepancy` | Nginx + Express + Bot | 🗓️ Planned |
+| | | `wcd-02-delimiter` | Nginx + Flask + Bot | ✅ Complete |
 | **02** | **SQL Injection** | `sqli-01-login-bypass` | PHP 8 + MySQL | 🗓️ Planned |
 | | | `sqli-02-union-extraction` | PHP 8 + MySQL | 🗓️ Planned |
 | | | `sqli-03-blind-time-based` | Python FastAPI + Postgres | 🗓️ Planned |

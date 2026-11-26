@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-9">
+    <div class="p-5 mb-4 bg-white rounded-3 shadow-sm border">
+      <div class="container-fluid py-2">
+        <h1 class="display-6 fw-bold">Lab 02: Web Cache Deception (Delimiter Discrepancy)</h1>
+        <p class="lead text-secondary">
+          NovaCorp's engineering team patched Lab 01 by strictly forbidding subpaths. If you try to request <code>/profile/avatar.css</code>, the application correctly returns <code>404 Not Found</code>. But did they secure delimiter parsing?
+        </p>
+        <hr class="my-4">
+        
+        <h5>🎯 Scenario Goal</h5>
+        <p>
+          Steal Chief Financial Officer <strong>Dr. Alex Mercer</strong>'s (<code>victim</code>) secret ledger flag and private API key. Subpath appending (<code>/profile/test.css</code>) is now blocked, so you must find an alternate delimiter discrepancy!
+        </p>
+
+        <div class="row mt-4">
+          <div class="col-md-6">
+            <div class="card h-100 border-warning">
+              <div class="card-header bg-warning text-dark fw-bold">
+                🔑 Pre-Seeded Credentials
+              </div>
+              <div class="card-body">
+                <p class="mb-1"><strong>Victim User (Target):</strong></p>
+                <ul>
+                  <li>Username: <code>victim</code></li>
+                  <li>Password: <code>P@sswordVictim2026!</code></li>
+                </ul>
+                <p class="mb-1"><strong>Attacker User (You):</strong></p>
+                <ul>
+                  <li>Username: <code>attacker</code></li>
+                  <li>Password: <code>attacker123</code></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card h-100 border-dark">
+              <div class="card-header bg-dark text-white fw-bold">
+                ⚡ Exploitation Workflow
+              </div>
+              <div class="card-body">
+                <ol class="small">
+                  <li>Verify that <code>/profile/test.css</code> gives a <strong>404 Not Found</strong> (Lab 01 is patched).</li>
+                  <li>Notice the backend supports matrix parameters using semicolons (<code>;</code>).</li>
+                  <li>Notice Nginx does not recognize <code>;</code> as a delimiter, treating <code>/profile;test.css</code> as a static <code>.css</code> asset.</li>
+                  <li>Submit <code>/profile;test.css</code> to the <strong>Audit Bot</strong>.</li>
+                  <li>Fetch <code>/profile;test.css</code> anonymously to exfiltrate the cached financial flag!</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 d-flex gap-2">
+          <a class="btn btn-warning text-dark fw-bold" href="/login">Go to Sign In</a>
+          <a class="btn btn-outline-secondary" href="/report">Audit Bot (Report Link)</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
