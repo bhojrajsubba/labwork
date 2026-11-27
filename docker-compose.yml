@@ -146,10 +146,61 @@ services:
       - wcd03-net
     restart: unless-stopped
 
+  # ==========================================
+  # Lab 04: Web Cache Deception (Cloudflare vs Nginx Origin Normalization)
+  # Profile: wcd-04
+  # ==========================================
+  wcd04-origin:
+    build:
+      context: ./labs/01-web-cache-deception/wcd-04-cloudflare-normalization/origin
+      args:
+        MODE: ${MODE}
+    profiles: ["wcd-04"]
+    ports:
+      - "${HOST_BIND_IP}:${PORT}:80"
+    env_file:
+      - .env
+    environment:
+      - MODE=${MODE}
+    depends_on:
+      - wcd04-app
+    networks:
+      - wcd04-net
+    restart: unless-stopped
+
+  wcd04-app:
+    build:
+      context: ./labs/01-web-cache-deception/wcd-04-cloudflare-normalization/app
+    profiles: ["wcd-04"]
+    env_file:
+      - .env
+    environment:
+      - MODE=${MODE}
+      - SECRET_KEY=${SECRET_KEY}
+      - BOT_SERVICE_URL=http://wcd04-bot:5001/visit
+    networks:
+      - wcd04-net
+    restart: unless-stopped
+
+  wcd04-bot:
+    build:
+      context: ./labs/01-web-cache-deception/wcd-04-cloudflare-normalization/bot
+    profiles: ["wcd-04"]
+    env_file:
+      - .env
+    environment:
+      - TARGET_HOST=wcd04-origin
+      - TARGET_PORT=80
+    networks:
+      - wcd04-net
+    restart: unless-stopped
+
 networks:
   wcd01-net:
     driver: bridge
   wcd02-net:
     driver: bridge
   wcd03-net:
+    driver: bridge
+  wcd04-net:
     driver: bridge

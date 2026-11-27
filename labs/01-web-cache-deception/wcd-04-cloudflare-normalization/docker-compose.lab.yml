@@ -1,0 +1,39 @@
+# Standalone Docker Compose for Lab 04 (Cloudflare vs Nginx Origin Normalization)
+# Run from this directory: docker compose -f docker-compose.lab.yml up --build
+
+services:
+  wcd04-origin:
+    build:
+      context: ./origin
+      args:
+        MODE: ${MODE}
+    ports:
+      - "${HOST_BIND_IP}:${PORT}:80"
+    env_file:
+      - ../../../.env
+    environment:
+      - MODE=${MODE}
+    depends_on:
+      - wcd04-app
+    restart: unless-stopped
+
+  wcd04-app:
+    build:
+      context: ./app
+    env_file:
+      - ../../../.env
+    environment:
+      - MODE=${MODE}
+      - SECRET_KEY=${SECRET_KEY}
+      - BOT_SERVICE_URL=http://wcd04-bot:5001/visit
+    restart: unless-stopped
+
+  wcd04-bot:
+    build:
+      context: ./bot
+    env_file:
+      - ../../../.env
+    environment:
+      - TARGET_HOST=wcd04-origin
+      - TARGET_PORT=80
+    restart: unless-stopped

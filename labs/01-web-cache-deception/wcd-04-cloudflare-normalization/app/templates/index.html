@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-9">
+    <div class="p-5 mb-4 bg-white rounded-3 shadow-sm border">
+      <div class="container-fluid py-2">
+        <h1 class="display-6 fw-bold">Lab 04: Cloudflare CDN vs. Nginx Origin Normalization</h1>
+        <p class="lead text-secondary">
+          NovaCorp placed <strong>Cloudflare CDN</strong> in front of its <strong>Nginx Origin</strong> reverse proxy. By default, Cloudflare does <strong>not</strong> normalize encoded path traversals (<code>..%2F</code>), while Nginx normalizes them whenever <code>proxy_pass</code> includes a trailing slash (<code>/</code>)!
+        </p>
+        <hr class="my-4">
+
+        <h5>🎯 Scenario Goal</h5>
+        <p>
+          Steal Director of Cloud Infrastructure <strong>Dr. Alex Mercer</strong>'s (<code>victim</code>) master vault API token and security flag by exploiting the normalization discrepancy between Cloudflare's edge cache rule and Nginx's trailing-slash origin forwarding.
+        </p>
+
+        <div class="row mt-4">
+          <div class="col-md-6">
+            <div class="card h-100 border-info">
+              <div class="card-header bg-info text-dark fw-bold">
+                🔑 Pre-Seeded Credentials
+              </div>
+              <div class="card-body">
+                <p class="mb-1"><strong>Victim User (Target):</strong></p>
+                <ul>
+                  <li>Username: <code>victim</code></li>
+                  <li>Password: <code>P@sswordVictim2026!</code></li>
+                </ul>
+                <p class="mb-1"><strong>Attacker User (You):</strong></p>
+                <ul>
+                  <li>Username: <code>attacker</code></li>
+                  <li>Password: <code>attacker123</code></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card h-100 border-dark">
+              <div class="card-header bg-dark text-white fw-bold">
+                ⚡ Exploitation Workflow
+              </div>
+              <div class="card-body">
+                <ol class="small">
+                  <li>Configure Cloudflare Cache Rule on <code>/static/*</code> (leaving URL Normalization disabled or sending <code>..%2F</code>).</li>
+                  <li>Cloudflare sees <code>/static/token/..%2F..%2Fprofile</code> under <code>/static/</code> and forwards it un-normalized.</li>
+                  <li>Origin Nginx uses <code>proxy_pass http://backend_app/;</code> (trailing slash), normalizing it to <code>/profile</code>.</li>
+                  <li>Submit the payload via the <strong>Audit Bot</strong> so Cloudflare caches Dr. Mercer's profile.</li>
+                  <li>Fetch the exact same URL unauthenticated to receive a Cloudflare cache <code>HIT</code>!</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 d-flex gap-2">
+          <a class="btn btn-info text-dark fw-bold" href="/login">Go to Sign In</a>
+          <a class="btn btn-outline-secondary" href="/report">Audit Bot (Report Link)</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

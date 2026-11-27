@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <div class="card shadow-sm border">
+      <div class="card-header bg-dark text-white fw-bold">
+        Submit Link to Infrastructure Director
+      </div>
+      <div class="card-body p-4">
+        <p class="text-muted">
+          Submit a path or full Cloudflare URL below for immediate administrative review. Director <code>Dr. Alex Mercer</code> will inspect the target using their authenticated session.
+        </p>
+
+        <form method="POST" action="/report">
+          <div class="mb-3">
+            <label for="url" class="form-label fw-bold">Target Path / URL</label>
+            <input type="text" class="form-control font-monospace" id="url" name="url" placeholder="/static/audit01/..%2F..%2Fprofile" required>
+            <div class="form-text">
+              Accepts relative paths (e.g. <code>/static/audit01/..%2F..%2Fprofile</code>) or full Cloudflare URLs (e.g. <code>https://your-domain.com/static/audit01/..%2F..%2Fprofile</code>).
+            </div>
+          </div>
+
+          <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-info fw-bold text-dark">Submit Link to Director</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
