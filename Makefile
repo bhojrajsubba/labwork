@@ -13,7 +13,7 @@ env-check:
 
 help:
 	@echo "Available commands:"
-	@echo "  make up LAB=<lab-name>       Start a specific lab (e.g. make up LAB=wcd-01 .. wcd-04)"
+	@echo "  make up LAB=<lab-name>       Start a specific lab (e.g. make up LAB=wcd-01 .. wcd-05)"
 	@echo "  make down LAB=<lab-name>     Stop a specific lab"
 	@echo "  make logs LAB=<lab-name>     View logs of a lab"
 	@echo "  make test LAB=<lab-name>     Run exploit test against the running lab"
@@ -49,6 +49,8 @@ test:
 		python labs/01-web-cache-deception/wcd-03-path-traversal-delimiter/exploit.py --url http://127.0.0.1:8081; \
 	elif [ "$(TARGET_LAB)" = "wcd-04" ]; then \
 		python labs/01-web-cache-deception/wcd-04-cloudflare-normalization/exploit.py --url http://127.0.0.1:8081; \
+	elif [ "$(TARGET_LAB)" = "wcd-05" ]; then \
+		python labs/01-web-cache-deception/wcd-05-rails-format-delimiter/exploit.py --url http://127.0.0.1:8081; \
 	else \
 		echo "Unknown lab: $(TARGET_LAB)"; exit 1; \
 	fi

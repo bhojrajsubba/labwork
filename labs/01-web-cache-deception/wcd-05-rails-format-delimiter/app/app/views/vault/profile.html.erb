@@ -1,0 +1,57 @@
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card shadow-sm border">
+      <div class="card-header bg-dark text-info d-flex justify-content-between align-items-center">
+        <span class="fw-bold">Confidential Infrastructure Vault</span>
+        <span class="badge bg-info text-dark"><%= current_user[:role] %></span>
+      </div>
+      <div class="card-body p-4">
+
+        <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
+          <div class="rounded-circle bg-info text-dark d-flex align-items-center justify-content-center me-3 fw-bold" style="width: 60px; height: 60px; font-size: 24px;">
+            <%= current_username[0].upcase %>
+          </div>
+          <div>
+            <h4 class="mb-0"><%= current_user[:name] %></h4>
+            <span class="text-muted"><%= current_user[:email] %></span>
+          </div>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label text-muted small">Vault Identifier</label>
+            <div class="fw-bold"><%= current_username %></div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label text-muted small">Infrastructure Budget</label>
+            <div class="fw-bold text-success fs-5"><%= current_user[:balance] %></div>
+          </div>
+
+          <% if params[:format].present? %>
+            <div class="col-12">
+              <div class="alert alert-info py-2 small mb-0 font-monospace">
+                <strong>Rails Format Delimiter Parsed:</strong> <code>.<%= params[:format] %></code>
+              </div>
+            </div>
+          <% end %>
+
+          <div class="col-12 mt-3">
+            <label class="form-label text-muted small">Root Infrastructure Master Token</label>
+            <div class="input-group">
+              <input type="text" class="form-control font-monospace bg-light" value="<%= current_user[:api_key] %>" readonly>
+            </div>
+            <small class="text-muted">Master cloud administrative credential. Keep confidential.</small>
+          </div>
+
+          <div class="col-12 mt-3">
+            <label class="form-label text-muted small">Security Flag</label>
+            <div class="alert alert-danger font-monospace py-2 mb-0">
+              <strong><%= current_user[:flag] %></strong>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
