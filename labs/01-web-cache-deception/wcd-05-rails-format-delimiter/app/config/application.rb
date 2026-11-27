@@ -26,6 +26,7 @@ module NovaVault
     mode = ENV.fetch("MODE", "vulnerable").downcase
     if mode == "vulnerable"
       # Prevent Rack::ETag from injecting `Cache-Control: max-age=0, private, must-revalidate`
+      require "rack/etag"
       config.middleware.delete Rack::ETag
     end
   end
