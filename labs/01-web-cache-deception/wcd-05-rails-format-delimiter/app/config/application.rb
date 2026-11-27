@@ -28,6 +28,9 @@ module NovaVault
       # Prevent Rack::ETag from injecting `Cache-Control: max-age=0, private, must-revalidate`
       require "rack/etag"
       config.middleware.delete Rack::ETag
+      # Prevent ActionDispatch::Flash from touching/dirtying session on GET requests
+      require "action_dispatch/middleware/flash"
+      config.middleware.delete ActionDispatch::Flash
     end
   end
 end

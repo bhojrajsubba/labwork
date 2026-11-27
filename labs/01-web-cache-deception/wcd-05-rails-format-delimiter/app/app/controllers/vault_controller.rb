@@ -40,6 +40,9 @@ class VaultController < ApplicationController
       response.headers["Cache-Control"] = "no-store, no-cache, private, must-revalidate"
       response.headers["Pragma"] = "no-cache"
       response.headers["Expires"] = "0"
+    else
+      # Do not commit/re-write Set-Cookie on read-only profile views
+      request.session_options[:skip] = true
     end
 
     render :profile
